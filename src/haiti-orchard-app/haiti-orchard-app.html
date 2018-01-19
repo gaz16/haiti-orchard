@@ -1,13 +1,46 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/app-layout/demo/sample-content.html">
 
 <dom-module id="haiti-orchard-app">
   <template>
     <style>
-      :host {
-        display: block;
-      }
+    
+    app-header {
+      color: #fff;
+      background-color: #C62828;
+      --app-header-background-front-layer: {
+        background-image: url("https://app-layout-assets.appspot.com/assets/test-drive.jpg");
+        background-position: 50% 10%;
+      };
+    }
+
+    [main-title] {
+      font-size: 2em;
+    }
+
     </style>
-    <h2>Hello [[prop1]]!</h2>
+
+    <app-header-layout fullbleed has-scrolling-region>
+    
+      <app-header slot="header" fixed condenses effects="blend-background parallax-background resize-title waterfall">
+      
+        <app-toolbar style="height:64px;">
+          <div condensed-title>My Assignments</div>
+        </app-toolbar>
+        <app-toolbar>
+          <div main-title spacer>Track Those Trees!</div>
+        </app-toolbar>
+
+      </app-header>
+
+      <sample-content size="100"></sample-content>
+
+    </app-header-layout>
+
   </template>
 
   <script>
