@@ -1,0 +1,32 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="haiti-orchard-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class HaitiOrchardApp extends Polymer.Element {
+      static get is() { return 'haiti-orchard-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'haiti-orchard-app'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(HaitiOrchardApp.is, HaitiOrchardApp);
+  </script>
+</dom-module>

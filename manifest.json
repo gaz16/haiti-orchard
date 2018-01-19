@@ -1,0 +1,7 @@
+{
+  "name": "haiti-orchard",
+  "short_name": "haiti-orchard",
+  "description": "A PWA for collecting orchard data",
+  "start_url": "/",
+  "display": "standalone"
+}
