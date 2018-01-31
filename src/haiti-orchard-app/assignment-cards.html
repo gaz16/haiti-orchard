@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="assignment-cards">
+
+  <script>
+    Polymer({
+      is: 'assignment-cards',
+      properties: {
+        padding: {
+          value: '16px'
+        },
+        margin: {
+          value: '24px'
+        },
+        boxShadow: {
+          value: '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)'
+        }
+      },
+      observers: [
+        '_render(padding, margin, boxShadow)'
+      ],
+      ready: function() {
+        this.style.display = 'block';
+      },
+      _render: function(padding, margin, boxShadow) {
+        var ref = firebase.database().ref("assignments/123456");
+        console.log("ref: " + ref);
+        var count = 1;
+        ref.once('value', function(snapshot) {
+          var html = '';
+          snapshot.forEach(function(data) {
+            console.log(data);
+            var assignment = data.val();
+            html +=
+              '<div style="box-shadow: ' + boxShadow +  '; padding: ' + padding + '; margin: ' + margin + '; border-radius: 5px; background-color: #fff; color: #757575;">' +
+              '<div style="display: inline-block; height: 64px; width: 64px; border-radius: 50%; background: #ddd; line-height: 64px; font-size: 30px; color: #555; text-align: center;">' + count + '</div>' +
+              '<div style="font-size: 22px; margin: 16px 0; color: #212121;">' + assignment.orchard + '</div>' +
+              '<p style="font-size: 16px;">' + assignment.deadline + '</p>' +
+              '<p style="font-size: 14px;">' + assignment.status + '</p>' +
+              '</div>';
+            console.log("html: " + html);
+            this.innerHTML = html;
+            count = count + 1;
+          });
+        });
+      }
+    });
+  </script>
+</dom-module>
