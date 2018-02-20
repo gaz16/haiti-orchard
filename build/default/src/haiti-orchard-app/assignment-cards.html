@@ -6,6 +6,21 @@
     Polymer({
       is: 'assignment-cards',
       properties: {
+        key: {
+          type: String,
+        },
+        orchard: {
+          type: String,
+        },
+        status: {
+          type: String,
+        },
+        deadline: {
+          type: String,
+        },
+        trees: {
+          type: Array,
+        },
         padding: {
           value: '16px'
         },
@@ -17,32 +32,32 @@
         }
       },
       observers: [
-        '_render(padding, margin, boxShadow)'
+        '_render(key, orchard, status, deadline, trees, padding, margin, boxShadow)'
       ],
       ready: function() {
         this.style.display = 'block';
       },
-      _render: function(padding, margin, boxShadow) {
-        var ref = firebase.database().ref("assignments/123456");
-        console.log("ref: " + ref);
-        var count = 1;
-        ref.once('value', function(snapshot) {
-          var html = '';
-          snapshot.forEach(function(data) {
-            console.log(data);
-            var assignment = data.val();
+      _render: function(key, orchard, status, deadline, trees, padding, margin, boxShadow) {
+        if (orchard !== undefined) {
+            console.log(trees);
+            var treeList = '';
+            for (var i = 0; i < trees.length; i++) {
+              treeList += this.get(["trees", i]);
+              if(i != trees.length - 1) {
+                treeList += ", ";
+              }
+            }
+            var html = '';
             html +=
               '<div style="box-shadow: ' + boxShadow +  '; padding: ' + padding + '; margin: ' + margin + '; border-radius: 5px; background-color: #fff; color: #757575;">' +
-              '<div style="display: inline-block; height: 64px; width: 64px; border-radius: 50%; background: #ddd; line-height: 64px; font-size: 30px; color: #555; text-align: center;">' + count + '</div>' +
-              '<div style="font-size: 22px; margin: 16px 0; color: #212121;">' + assignment.orchard + '</div>' +
-              '<p style="font-size: 16px;">' + assignment.deadline + '</p>' +
-              '<p style="font-size: 14px;">' + assignment.status + '</p>' +
+              '<div style="display: inline-block; height: 64px; width: 64px; border-radius: 50%; background: #ddd; line-height: 64px; font-size: 30px; color: #555; text-align: center;">' + (parseInt(key) + 1) + '</div>' +
+              '<div style="font-size: 22px; margin: 16px 0; color: #212121;">' + orchard + '</div>' +
+              '<p style="font-size: 16px;">' + status + '</p>' +
+              '<p style="font-size: 14px;">' + deadline + '</p>' +
+              '<p style="font-size: 14px;">' + treeList + '</p>' +
               '</div>';
-            console.log("html: " + html);
-            this.innerHTML = html;
-            count = count + 1;
-          });
-        });
+            this.innerHTML += html;
+        }
       }
     });
   </script>

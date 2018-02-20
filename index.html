@@ -15,6 +15,18 @@
     <link rel="import" href="/src/haiti-orchard-app/haiti-orchard-app.html">
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
     <script>
+      if('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(
+              function(registration) {
+                console.log('Service Worker Registered', registration);
+              }
+             );
+        });
+      }
+    </script>
+    <script>
       // Initialize Firebase
       var config = {
         apiKey: "AIzaSyAwRldbf07B1IRyHx8Y1Xkat-lknXV87vQ",
@@ -28,6 +40,11 @@
     </script>
   </head>
   <body>
+    <script>
+      var ref = firebase.database().ref("assignments/123456");
+      console.log("ref: " + ref);
+      console.log(ref);
+    </script>
     <haiti-orchard-app></haiti-orchard-app>
   </body>
 </html>

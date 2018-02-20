@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="assignment-cards.html">
+
+<dom-module id="assignment-section">
+  <template>
+    <script>
+      if('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('../../service-worker.js')
+            .then(
+              function(registration) {
+                console.log('Service Worker Registered', registration);
+              }
+             );
+        });
+      }
+    </script>
+  <firebase-query id="query" path="assignments/123456" data="{{data}}">
+  </firebase-query>
+
+  <template is="dom-repeat" items="{{data}}" as="assignment">
+    <assignment-cards key="{{index}}" orchard="[[assignment.orchard]]" status="[[assignment.status]]" deadline="[[assignment.deadline]]" trees="[[assignment.trees]]"><assignment-cards>
+  </assignment-cards></assignment-cards></template>
+
+  </template>
+
+  <script>
+  Polymer({
+   is: 'assignment-section',
+   properties: {
+     data: {
+       type: Array,
+       observer: 'dataChanged'
+     }
+   },
+   dataChanged: function (newData, oldData) {
+     console.log("old data: " + oldData);
+     console.log("new data: " + newData);
+     console.log(newData);
+     var ref = firebase.database().ref("assignments/123456");
+     ref.once('value', function(snapshot) {
+       snapshot.forEach(function(data) {
+         var obj = data.val();
+         console.log("inside dataChanged!");
+       });
+     });
+   }
+  });
+  </script>
+
+</dom-module>
