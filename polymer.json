@@ -3,7 +3,10 @@
   "shell": "src/haiti-orchard-app/haiti-orchard-app.html",
   "fragments": [
     "src/haiti-orchard-app/my-assignment.html",
-    "src/haiti-orchard-app/assignment-cards.html"
+    "src/haiti-orchard-app/assignment-cards.html",
+    "src/haiti-orchard-app/assignment-section.html",
+    "service-worker.js",
+    "manifest.json"
   ],
   "lint": {
     "rules": [
