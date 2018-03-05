@@ -5,8 +5,19 @@
     "src/haiti-orchard-app/my-assignment.html",
     "src/haiti-orchard-app/assignment-cards.html",
     "src/haiti-orchard-app/assignment-section.html",
+    "src/haiti-orchard-app/render-assignments.html",
+    "src/haiti-orchard-app/orchard-questions.html",
+    "src/haiti-orchard-app/orchard-survey.html",
+    "src/haiti-orchard-app/tree-survey.html",
     "service-worker.js",
+    "fetchassignments.js",
+    "orchardsurvey.js",
+    "treesurvey.js",
+    "click-assignment.js",
     "manifest.json"
+  ],
+  "sources": [
+    "images/*"
   ],
   "lint": {
     "rules": [

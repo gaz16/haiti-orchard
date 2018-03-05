@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head>
+  </head>
+  <body>
+     <div id="header" style="position: fixed; right: 0px; left: 0px; width: 100%; height: 50px; top: 0px; vertical-align: middle; line-height: 50px; font-size: 16px; color: #fff; background-color: #3D2077; padding-left: 32px;">Orchard Survey: </div>
+    <div style="height: 50px"></div>
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Does the orchard have a fence around it?</div>
+      <input type="radio" name="hasfence" value="0">No<br>
+      <input type="radio" name="hasfence" value="1">Yes<br>
+    </div>
+
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Are chemical pesticides used in the orchard?</div>
+      <input type="radio" name="usepesticides" value="0">No<br>
+      <input type="radio" name="usepesticides" value="1">Yes<br>
+    </div>
+
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Are chemical fertilizers used in the orchard?</div>
+      <input type="radio" name="usefertilizers" value="0">No<br>
+      <input type="radio" name="usefertilizers" value="1">Yes<br>
+    </div>
+
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Are the trees infested with insects?</div>
+      <input type="radio" name="infested" value="0">No<br>
+      <input type="radio" name="infested" value="1">Yes<br>
+    </div>
+
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">How often are the trees pruned?</div>
+      <input type="radio" name="pruned" value="0">Once A Week<br>
+      <input type="radio" name="pruned" value="1">Every Two Weeks<br>
+      <input type="radio" name="pruned" value="2">Once A Month<br>
+      <input type="radio" name="pruned" value="3">Every Few Months
+    </div>
+
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">What shape is used for pruning?</div>
+      <input type="radio" name="shape" value="0">Circlular<br>
+      <input type="radio" name="shape" value="1">Triangular<br>
+      <input type="radio" name="shape" value="2">Boxed<br>
+      <input type="radio" name="shape" value="3">Other
+    </div>
+
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">What crops are growing beneath the trees?</div>
+      <input type="radio" name="crops" value="0">Beans<br>
+      <input type="radio" name="crops" value="1">Peas<br>
+      <input type="radio" name="crops" value="2">None<br>
+      <input type="radio" name="crops" value="3">Other
+    </div>
+
+    <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Continue</div>
+      <div id="warning" style="font-size: 16px; margin: 16px 0;">All fields must be filled in before continuing!</div>
+      <button id="continue" type="button">Continue</button>
+    </div>
+  
+  <script src="../../orchardsurvey.js"></script>
+
+</body></html>

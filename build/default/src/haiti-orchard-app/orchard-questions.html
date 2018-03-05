@@ -1,0 +1,46 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="orchard-questions">
+  <template>
+    <div style="box-shadow: {{boxShadow}}; padding: {{padding}}; margin: {{margin}}; border-radius: 5px; background-color: #fff; color: #757575;" hidden$="{{hide}}">
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Does the orchard have a fence around it?</div>
+    </div>
+  </template>
+
+  <script>
+    class OrchardQuestions extends Polymer.Element {
+      static get is() { return 'orchard-questions';}
+      static get properties() {
+        return {
+          padding: {
+            value: '16px'
+          },
+          margin: {
+            value: '24px'
+          },
+          boxShadow: {
+            value: '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)'
+          },
+          hide: {
+            type: Boolean,
+            value: true
+          }
+        };
+      }
+
+      constructor() {
+        super();
+      }
+
+      ready() {
+        super.ready();
+        this.style.display = 'block';
+      }
+
+      showMe() {
+        this.hide = !this.hide;
+      }  
+    }
+    customElements.define(OrchardQuestions.is, OrchardQuestions);
+  </script>
+</dom-module>

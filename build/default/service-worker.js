@@ -1,12 +1,12 @@
-var cacheName = 'haitiOrchardPWA-1';
+var cacheName = 'haitiOrchardPWA-2';
 var dataCacheName = 'haitiOrchardData-1';
 var dataUrl = 'https://haiti-orchard.firebaseio.com/assignments/123456';
 var filesToCache = [
   '/',
   '/index.html',
-  '/src/haiti-orchard-app/haiti-orchard-app.html',
-  '/src/haiti-orchard-app/assignment-section.html',
-  '/src/haiti-orchard-app/assignment-cards.html'
+  '/fetchassignments.js',
+  '/orchardsurvey.js',
+  '/treesurvey.js'
 ];
 
 self.addEventListener('install', function(e) {
@@ -44,6 +44,11 @@ self.addEventListener('fetch', function(e) {
             console.log('[ServiceWorker] Fetched&Cached Data');
             return response;
           });
+        }).catch(function(reponse) {
+          console.log("request failed!");
+          caches.match(e.request).then(function(response) {
+            return response;
+          })
         })
     );
   } else {

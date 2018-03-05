@@ -1,0 +1,152 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="render-assignments">
+  <template>
+    <div id="assignmentSection" hidden$="{{hide}}"></div>
+  </template>
+
+  <script>
+    class RenderAssignments extends Polymer.Element {
+      static get is() { return 'render-assignments'; }
+      static get properties() {
+        return {
+          size: {
+            type: Number,
+            value: 0
+          },
+          padding: {
+            value: '16px'
+          },
+          margin: {
+            value: '24px'
+          },
+          boxShadow: {
+            value: '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)'
+          },
+          hide: {
+            type: Boolean,
+            value: false
+          },
+          showMe: function() {
+            this.hide = !this.hide;
+            console.log("assignment clicked!");
+          }
+        };
+      }
+      
+      constructor() {
+        super();
+        console.log("constructor!");
+      } 
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("connectedCallback!");
+      }
+
+      ready() {
+        super.ready();
+        console.log("ready");
+        console.log(this.shadowRoot);
+        var root = this.shadowRoot;
+        console.log(root);
+        console.log(this.hide);
+        var showMe = function(){return this.hide = !this.hide};
+        var boxShadow = this.boxShadow;
+        var padding = this.padding;
+        var margin = this.margin;
+        var hide = this.hide;
+        this.style.display = 'block';
+        var url = "https://haiti-orchard.firebaseio.com/assignments/123456.json";
+        if ('caches' in window) {
+          caches.match(url).then(function(response) {
+            if (response) {
+              response.json().then(function(json) {
+                console.log("cached json: " + json);
+                for(var i = 0; i < json.length; i++) {
+                  var key = i;
+                  var orchard = json[i].orchard;
+                  var status = json[i].status;
+                  var trees = json[i].trees;
+                  var deadline = json[i].deadline;
+                  if (orchard !== undefined) {
+                    console.log(trees);
+                    var treeList = '';
+                    for (var j = 0; j < trees.length; j++) {
+                      treeList += trees[j];
+                      if(j != trees.length - 1) {
+                        treeList += ", ";
+                      }
+                    }
+                    var html = '';
+                    html +=
+                        '<div style="box-shadow: ' + boxShadow +  '; padding: ' + padding + '; margin: ' + margin + '; border-radius: 5px; background-color: #fff; color: #757575;">' +
+                        '<div style="display: inline-block; height: 64px; width: 64px; border-radius: 50%; background: #ddd; line-height: 64px; font-size: 30px; color: #555; text-align: center;">' + (parseInt(key) + 1) + '</div>' +
+                        '<div style="font-size: 22px; margin: 16px 0; color: #212121;">' + orchard + '</div>' +
+                        '<p style="font-size: 16px;">' + status + '</p>' +
+                        '<p style="font-size: 14px;">' + deadline + '</p>' +
+                        '<p style="font-size: 14px;">' + treeList + '</p>' +
+                        '</div>';
+                    console.log("adding html!");
+                    root.querySelector("#assignmentSection").innerHTML += html;
+                  }
+                }
+              });
+            }
+          });
+        }
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+          console.log("request status: " + request.status);
+          if(request.readyState === XMLHttpRequest.DONE) {
+            if(request.status === 200) {
+              var response = JSON.parse(request.response);
+              console.log("http response: " + response);
+              console.log(response);
+              console.log(response.length);
+              for(var i = 0; i < response.length; i++) {
+                console.log("inside for loop!");
+                var key = i;
+                var orchard = response[i].orchard;
+                var status = response[i].status;
+                var trees = response[i].trees;
+                var deadline = response[i].deadline;
+                if (orchard !== undefined) {
+                  console.log(trees);
+                  var treeList = '';
+                  for (var j = 0; j < trees.length; j++) {
+                    treeList += trees[j];
+                    if(j != trees.length - 1) {
+                      treeList += ", ";
+                    }
+                  }
+                  console.log("hide: " + hide);
+                  console.log("this.hide: " + this.hide);
+                  console.log(this.hide);
+                  var html = '';
+                  console.log("boxShadow: " + boxShadow);
+                  html +=
+                        '<div style="box-shadow: ' + boxShadow +  '; padding: ' + padding + '; margin: ' + margin + '; border-radius: 5px; background-color: #fff; color: #757575;">' +
+                        '<div style="display: inline-block; height: 64px; width: 64px; border-radius: 50%; background: #ddd; line-height: 64px; font-size: 30px; color: #555; text-align: center;">' + (parseInt(key) + 1) + '</div>' + 
+                        '<button id="button' + key + '"type="button" style="float: right; border:none;" onclick="showMe"><img src="../../images/arrow-point-to-right.png" width="50%" height="50%"></button>' +
+                        '<div style="font-size: 22px; margin: 16px 0; color: #212121;">' + orchard + '</div>' +
+                        '<p style="font-size: 16px;">' + status + '</p>' + 
+                        '<p style="font-size: 14px;">' + deadline + '</p>' +
+                        '<p style="font-size: 14px;">' + treeList + '</p>' +
+                        '</div>';
+                  console.log("adding html!");
+                  console.log(root);
+                  root.querySelector("#assignmentSection").innerHTML += html;
+                }
+              }
+            }
+          }
+        };
+        request.open('GET', url);
+        request.send();
+      }
+    }
+    customElements.define(RenderAssignments.is, RenderAssignments);
+  </script>
+  <script src="../../click-assignment.js"></script>
+</dom-module>

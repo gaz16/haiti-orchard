@@ -5,18 +5,6 @@
 
 <dom-module id="assignment-section">
   <template>
-    <script>
-      if('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('../../service-worker.js')
-            .then(
-              function(registration) {
-                console.log('Service Worker Registered', registration);
-              }
-             );
-        });
-      }
-    </script>
   <firebase-query id="query" path="assignments/123456" data="{{data}}">
   </firebase-query>
 
