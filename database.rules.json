@@ -1,6 +1,19 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "assignments" : {
+      "123456" : {
+        ".indexOn": ["status"] 
+      },
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "users" : {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "orchards" : {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
   }
 }

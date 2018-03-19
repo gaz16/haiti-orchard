@@ -1,0 +1,74 @@
+<!DOCTYPE html><html><head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <style>
+      {box-sizing: border-box}
+
+      body, html {
+        height: 100%;
+        margin: 0;
+      }
+
+      .tablink {
+        background-color: #F5F5F5;
+        color: "black";
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        font-size: 17px;
+        width: 33%; 
+      }
+
+      .tablink:hover {
+        background-color: #3D2077;
+        color: "white";
+      }
+
+      .tabcontent {
+        color: "black";
+        display: none;
+        padding: 100px 20px;
+        height: 100%;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <button class="tablink" onclick="openPage('Assignments', this)">Assignments</button>
+    <button class="tablink" onclick="openPage('Orchards', this)">Orchards</button>
+    <button class="tablink" onclick="openPage('Users', this)">Users</button>
+
+    <div id="Assignments" class="tabcontent">
+      <h3>Assignments</h3>
+    </div>
+
+    <div id="Orchards" class="tabcontent">
+      <h3>Orchards</h3>
+    </div>
+
+    <div id="Users" class="tabcontent">
+      <h3>Users</h3>
+    </div>
+
+    <script>
+      function openPage(pageName, elmnt) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].style.backgroundColor = "";
+        }
+        document.getElementById(pageName).style.display = "block"; 
+        elmnt.style.backgroundColor = "white";
+      }
+    </script>
+  
+
+
+</body></html>

@@ -30,7 +30,7 @@ firebase.auth().onAuthStateChanged(function(user) {
       console.log("user: ");
       var user = result.user;
       console.log(user);
-      fetchAssignments();
+      checkUser();
     }).catch(function(error) {
       var errorCode = error.code;
       console.log("error code: " + errorCode);
@@ -44,28 +44,86 @@ firebase.auth().onAuthStateChanged(function(user) {
     //window.user = user;
     console.log(user);    
     result = user;
-    token = user.getIdToken();
-    fetchAssignments();
+    user.getIdToken().then(function(token) {
+      localStorage.setItem("idToken", token);
+    });
+    checkUser();
   }
 });
 
+function checkUser() {
+  console.log(localStorage.getItem("userType"));
+  if (localStorage.getItem("userType") == "supervisor") {
+    console.log("This user is a supervisor!");
+    window.location.href = "src/haiti-orchard-app/supervisor-home.html";
+  }
+  else if (localStorage.getItem("userType") == "datacollector") {
+    console.log("This user is a data collector!");
+    fetchAssignments();
+  }
+  else {
+    getUserType();
+  }
+}
+
+function checkAuthorization() {
+  // User is not authorized
+  if (localStorage.getItem("userType") == null) {
+    console.log("This user is not authorized to use this app!!!");
+    var html = '';
+    html +=
+             '<div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">' +
+              '<div style="font-size: 22px; margin: 16px 0; color: #212121;">This email is not authorized to use the Haiti Orchard App.</div>' +
+              '<p style="font-size: 16px;">Please contact a supervisor at haitiorchardapp@gmail.com for more information.</p>' +
+              '</div>';
+    document.getElementById("assignmentsSection").innerHTML = '';
+    document.getElementById("assignmentsSection").innerHTML = html;
+  }
+}
+
+function getUserType() {
+  var userKey = Object.keys(window.localStorage).filter(it => it.startsWith('firebase:authUser'))[0];
+  var user = userKey ? JSON.parse(localStorage.getItem(userKey)) : undefined;
+  var email = user.email;
+
+  var key = email.split("@")[0];
+  console.log(key);
+
+  // Check to see if the user is a data collector
+  firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      var url = 'https://haiti-orchard.firebaseio.com/users/' + key + '.json?auth=' + idToken;
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+        if(request.readyState === XMLHttpRequest.DONE) {
+          if(request.status === 200) {
+            var response = JSON.parse(request.response);
+            console.log("http response: " + response);
+            console.log(response);
+            if (response == null) {
+              checkAuthorization();
+            }
+            else if (response.role == "datacollector") {
+              localStorage.setItem("userType", "datacollector");
+              fetchAssignments();
+            }
+            else {
+              localStorage.setItem("userType", "supervisor");
+              window.location.href = "src/haiti-orchard-app/supervisor-home.html";
+            }
+          }
+        }
+      };
+      request.open('GET', url);
+      request.send();
+  });
+}
+
 function fetchAssignments() {
+document.getElementById("header").innerHTML = '';
+document.getElementById("header").innerHTML = '<div style="position: fixed; right: 0px; left: 0px; width: 100%; height: 100px; top: 0px; vertical-align: middle; line-height: 100px; font-size: 32px; color: #fff; background-color: #3D2077;"><span style="padding-left: 32px;">My Assignments</span></div>';
 var userKey = Object.keys(window.localStorage).filter(it => it.startsWith('firebase:authUser'))[0];
 var user = userKey ? JSON.parse(localStorage.getItem(userKey)) : undefined;
-//console.log("user: ");
-//console.log(user);
-//console.log(user.apiKey);
-//console.log("access_token: ");
-//console.log(firebase.auth().currentUser.getIdToken());
-//console.log("result: ");
-//console.log(result);
-//console.log("token: ");
-//console.log(token);
-//console.log("credential: ");
-//console.log(credential);
-//console.log(credential.accessToken);
-firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-var url = "https://haiti-orchard.firebaseio.com/assignments/123456.json?auth=" + idToken;
+var url = 'https://haiti-orchard.firebaseio.com/assignments/123456.json?auth=' + localStorage.getItem("idToken") + '&orderBy="status"&equalTo="open"';
 if ('caches' in window) {
   caches.match(url).then(function(response) {
     if (response) {
@@ -73,7 +131,7 @@ if ('caches' in window) {
       response.json().then(function(json) {
         console.log("cached json: " + json);
         console.log(json);
-        for(var i = 0; i < json.length; i++) {
+        for(var i = 0; i < Object.keys(json).length; i++) {
         var key = i;
         var boxShadow = '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)';
         var margin = '24px';
@@ -86,6 +144,9 @@ if ('caches' in window) {
     }
   });
 }
+firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+//localStorage.setItem("idToken", idToken);
+var url = 'https://haiti-orchard.firebaseio.com/assignments/123456.json?auth=' + idToken + '&orderBy="status"&equalTo="open"';
 var request = new XMLHttpRequest();
 request.onreadystatechange = function() {
   if(request.readyState === XMLHttpRequest.DONE) {
@@ -94,7 +155,9 @@ request.onreadystatechange = function() {
       var response = JSON.parse(request.response);
       console.log("http response: " + response);
       console.log(response);
-      for(var i = 0; i < response.length; i++) {
+      console.log("length: " + Object.keys(response).length);
+      for(var i = 0; i < Object.keys(response).length; i++) {
+        console.log("key: " + i);
         var key = i;
         var boxShadow = '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)';
         var margin = '24px';
@@ -108,10 +171,14 @@ request.onreadystatechange = function() {
 };
 request.open('GET', url);
 request.send();
+})
+.catch(function(error) {
+  console.log("error firebase.auth().currentUser: " + error);
 });
 }
 
 function renderCard(key, orchard, status, deadline, trees, padding, margin, boxShadow) {
+  console.log("inside render card!");
   if (orchard !== undefined) {
     console.log(trees);
     var treeList = '';

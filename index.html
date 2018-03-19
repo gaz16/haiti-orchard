@@ -7,7 +7,6 @@
     <title>haiti-orchard</title>
     <meta name="description" content="A PWA for collecting orchard data">
 
-    <!-- See https://goo.gl/OOhYW5 -->
     <link rel="manifest" href="/manifest.json">
 
     <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
@@ -37,10 +36,11 @@
         messagingSenderId: "935432594241"
       };
       firebase.initializeApp(config);
+      console.log("firebase app initialized");
     </script>
   </head>
   <body>
-    <div id="header" style="position: fixed; right: 0px; left: 0px; width: 100%; height: 100px; top: 0px; vertical-align: middle; line-height: 100px; font-size: 32px; color: #fff; background-color: #3D2077;"><span style="padding-left: 32px;">My Assignments</span></div> 
+    <div id="header"></div>
     <div id="assignmentsSection"></div>
     <div id="orchardQuestions"></div>
   </body>

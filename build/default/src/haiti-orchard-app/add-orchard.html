@@ -1,0 +1,148 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <style>
+      #myInput {
+        background-image: url('../../images/search.png');
+        background-position: 10px 12px;
+        background-repeat: no-repeat;
+        width: 99%;
+        font-size: 16px;
+        padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+      }
+
+      #myUL {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #myUL li a{
+        border: 1px solid #ddd;
+        margin-top: -1px; /* Prevent double borders */
+        background-color: #f6f6f6;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block
+      }
+
+      #myUL li a:hover:not(.header) {
+        background-color: #eee;
+      }
+
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 10px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAwRldbf07B1IRyHx8Y1Xkat-lknXV87vQ",
+        authDomain: "haiti-orchard.firebaseapp.com",
+        databaseURL: "https://haiti-orchard.firebaseio.com",
+        projectId: "haiti-orchard",
+        storageBucket: "haiti-orchard.appspot.com",
+        messagingSenderId: "935432594241"
+      };
+      firebase.initializeApp(config);
+    </script>
+  </head>
+  <body>
+     <div id="header" style="position: fixed; right: 0px; left: 0px; width: 100%; height: 100px; top: 0px; vertical-align: middle; line-height: 100px; font-size: 32px; color: #fff; background-color: #3D2077; padding-left: 32px;">Orchards
+        <button id="addOrchard" type="button" style="opacity: 1; vertical-align: middle; line-height: 100px; padding-right: 32px; background-color: transparent; float: right; border:none;">
+          <img src="../../images/big-plus-sign-white.png" width="50%" height="50%">
+        </button>
+    </div>
+    <div style="height: 100px"></div>
+
+    <input type="text" id="myInput" placeholder="Search for an orchard..." title="Type in a name">
+    
+    <div id="card"></div>
+
+    <ul id="myUL">
+    </ul>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">×</span>
+     
+        <div style="padding: 16px; margin: 24px; background-color: #3D2077; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: white;">Add A New Orchard</div>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Please Enter The Name Of The Orchard.</div>
+          <span>Orchard Name: </span><input id="name" type="text" name="name"><br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Please Enter The Location Of The Orchard.</div>
+          <span>Latitude: </span><input id="latitude" type="number" name="latitude"><br>
+          <span>Longitude: </span><input id="longitude" type="number" name="longitude"><br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Please Choose The Soil Type That Best Represents The Terrain.</div>
+          <input type="radio" name="soil" value="0">Clay<br>
+          <input type="radio" name="soil" value="1">Loam<br>
+          <input type="radio" name="soil" value="2">Sand<br>
+          <input type="radio" name="soil" value="3">Silt<br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">How Many People Does This Orchard Directly Provide For?</div>
+          <span>Direct Benefitors: </span><input id="benefitors" type="number" name="benefitors"><br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">How Many Trees Will Be Planted In This Orchard?</div>
+          <span>Number Of Trees: </span><input id="trees" type="number" name="numTrees"><br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Add New Orchard</div>
+          <div id="warning" style="font-size: 16px; margin: 16px 0;">All fields must be filled in before continuing!</div>
+          <button id="add" type="button">Add</button>
+        </div>
+
+      </div>
+    </div>
+  
+  <script src="../../orchards.js"></script>
+
+</body></html>

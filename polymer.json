@@ -2,22 +2,24 @@
   "entrypoint": "index.html",
   "shell": "src/haiti-orchard-app/haiti-orchard-app.html",
   "fragments": [
-    "src/haiti-orchard-app/my-assignment.html",
-    "src/haiti-orchard-app/assignment-cards.html",
-    "src/haiti-orchard-app/assignment-section.html",
-    "src/haiti-orchard-app/render-assignments.html",
-    "src/haiti-orchard-app/orchard-questions.html",
     "src/haiti-orchard-app/orchard-survey.html",
     "src/haiti-orchard-app/tree-survey.html",
+    "src/haiti-orchard-app/supervisor.html",
+    "src/haiti-orchard-app/supervisor-home.html",
+    "src/haiti-orchard-app/add-user.html",
+    "src/haiti-orchard-app/add-orchard.html",
+    "src/haiti-orchard-app/add-assignment.html",
+    "users.js",
+    "orchards.js",
+    "assignments.js",
     "service-worker.js",
     "fetchassignments.js",
     "orchardsurvey.js",
-    "treesurvey.js",
-    "click-assignment.js",
-    "manifest.json"
+    "treesurvey.js"
   ],
   "sources": [
-    "images/*"
+    "images/*",
+    "manifest.json"
   ],
   "lint": {
     "rules": [

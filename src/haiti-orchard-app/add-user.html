@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <style>
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      th {
+        text-align: left;
+        color: black;
+      }
+      th, td {
+        padding: 15px;
+      }
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 10px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAwRldbf07B1IRyHx8Y1Xkat-lknXV87vQ",
+        authDomain: "haiti-orchard.firebaseapp.com",
+        databaseURL: "https://haiti-orchard.firebaseio.com",
+        projectId: "haiti-orchard",
+        storageBucket: "haiti-orchard.appspot.com",
+        messagingSenderId: "935432594241"
+      };
+      firebase.initializeApp(config);
+    </script>
+  </head>
+  <body>
+     <div id="header" style="position: fixed; right: 0px; left: 0px; width: 100%; height: 100px; top: 0px; vertical-align: middle; line-height: 100px; font-size: 32px; color: #fff; background-color: #3D2077; padding-left: 32px;">Users</div>
+    <div style="height: 100px"></div>
+
+    <div id="supervisors" style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <button id="addSupervisor" type="button" style="float: right; border:none;">
+        <img src="../../images/big-plus-sign.png" width="50%" height="50%">
+      </button>
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Supervisors</div>
+      <table id="supervisorTable" style="width: 100%;">
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Email</th>
+        </tr>
+      </table>
+    </div>
+
+    <div id="dataCollectors" style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+      <button id="addDataCollector" type="button" style="float: right; border:none;">
+        <img src="../../images/big-plus-sign.png" width="50%" height="50%">
+      </button>
+      <div style="font-size: 22px; margin: 16px 0; color: #212121;">Data Collectors</div>
+      <table id="dataCollectorsTable" style="width: 100%;">
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Email</th>
+        </tr>
+      </table>
+    </div>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <div style="padding: 16px; margin: 24px; background-color: #3D2077; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: white;">Add A New User</div>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Please Enter The User's Email Address.</div>
+          <span>Email: </span><input id="email" type="text" name="name"><br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Please Enter The User's Name.</div>
+          <span>Firstname: </span><input id="firstname" type="text" name="name"><br>
+          <span>Lastname: </span><input id="lastname" type="text" name="name"><br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Will The User Be A Supervisor Or A Data Collector?</div>
+          <input id="supervisor" type="radio" name="role" value="0">Supervisor<br>
+          <input id="dataCollector" type="radio" name="role" value="1">Data Collector<br>
+        </div>
+
+        <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); padding: 16px; margin: 24px; border-radius: 5px; background-color: #fff; color: #757575;">
+          <div style="font-size: 22px; margin: 16px 0; color: #212121;">Add A New User</div>
+          <div id="warning" style="font-size: 16px; margin: 16px 0;">All fields must be filled in before continuing!</div>
+          <button id="add" type="button">Add</button>
+        </div>
+
+      </div>
+    </div>
+  
+  </body>
+  <script src="../../users.js"></script>
+</html>

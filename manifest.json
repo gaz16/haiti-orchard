@@ -5,5 +5,30 @@
 	"short_name": "haiti-orchard",
 	"description": "A PWA for collecting orchard data",
 	"start_url": "/index.html",
-	"display": "standalone"
+	"display": "standalone",
+	"icons": [{
+		"src": "images/haiti-icon-48x48.png",
+		"type": "image/png",
+		"sizes": "48x48"
+		},
+		{
+		"src": "images/haiti-icon-96x96.png",
+		"type": "image/png",
+		"sizes": "96x96"
+		},
+		{
+		"src": "images/haiti-icon-144x144.png",
+		"type": "image/png",
+		"sizes": "144x144"
+		},
+		{
+		"src": "images/haiti-icon-152x152.png",
+		"type": "image/png",
+		"sizes": "152x152"
+		},
+		{
+		"src": "images/haiti-icon-192x192.png",
+		"type": "image/png",
+		"sizes": "192x192"
+        	}]
 }
