@@ -12,24 +12,29 @@ firebase.auth().onAuthStateChanged(function(user) {
 var closedAssignments = [];
 var openAssignments = [];
 var orchards = [];
+var lastKey = 0;
 
 function getAssignments() {
-  firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-    var url = 'https://haiti-orchard.firebaseio.com/assignments.json?auth=' + idToken;
+    var url = 'https://haiti-orchard.firebaseio.com/assignments.json?auth=' + localStorage.getItem("idToken");
     if ('caches' in window) {
       caches.match(url).then(function(response) {
         if (response) {
+          closedAssignments = [];
+          openAssignments = [];
+          orchards = [];
           response.json().then(function(json) {
             console.log("cached json: " + json);
             console.log(json);
-            var users = json.length;
-            for(var i = 0; i < users; i++) {
-              var assignments = json[i];
-              for(var j = 0; j < assignments.length; j++) {
-                if(assignments[j].status == "open") {
-                  openAssignments.push(assignments[j]);
+            var users = Object.keys(json);
+            for(var i = 0; i < users.length; i++) {
+              var assignments = json[users[i]];
+              var keys = Object.keys(assignments); 
+              for(var j = 0; j < keys.length; j++) {
+                lastKey = j;
+                if(assignments[keys[j]].status == "open") {
+                  openAssignments.push(assignments[keys[j]]);
                 } else {
-                  closedAssignments.push(assignments[j]);
+                  closedAssignments.push(assignments[keys[j]]);
                 }
               }
             }
@@ -44,6 +49,9 @@ function getAssignments() {
     request.onreadystatechange = function() {
       if(request.readyState === XMLHttpRequest.DONE) {
         if(request.status === 200) {
+          closedAssignments = [];
+          openAssignments = [];
+          orchards = [];
           var response = JSON.parse(request.response);
           console.log("http response: " + response);
           console.log(response);
@@ -52,6 +60,7 @@ function getAssignments() {
           for(var i = 0; i < users.length; i++) {
             var assignments = response[users[i]];
             for(var j = 0; j < assignments.length; j++) {
+              lastKey = j;
               console.log(assignments[j]);
               if(assignments[j].status == "open") {
                 console.log("add to open array!");
@@ -72,12 +81,10 @@ function getAssignments() {
     };
     request.open('GET', url);
     request.send();
-    });
 }
 
 function getOrchards() {
-  firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-    var url = 'https://haiti-orchard.firebaseio.com/orchards.json?auth=' + idToken;
+    var url = 'https://haiti-orchard.firebaseio.com/orchards.json?auth=' + localStorage.getItem("idToken");
     if ('caches' in window) {
       caches.match(url).then(function(response) {
         if (response) {
@@ -120,12 +127,10 @@ function getOrchards() {
     };
     request.open('GET', url);
     request.send();
-    });
 }
 
 function getStudents() {
-  firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-    var url = 'https://haiti-orchard.firebaseio.com/datacollectors.json?auth=' + idToken;
+    var url = 'https://haiti-orchard.firebaseio.com/users.json?auth=' + localStorage.getItem("idToken");
     if ('caches' in window) {
       caches.match(url).then(function(response) {
         if (response) {
@@ -133,8 +138,11 @@ function getStudents() {
             console.log("cached json: " + json);
             console.log(json);
             var html = '';
-            for(var i = 0; i < json.length; i++) {
-              html += '<option>' + json[i].firstname + ' ' +  json[i].lastname + '</option>';
+            var keys = Object.keys(json);
+            for(var i = 0; i < keys.length; i++) {
+              if (json[keys[i]].role == "datacollector") {
+                html += '<option>' + json[keys[i]].firstname + ' ' +  json[keys[i]].lastname + '</option>';
+              }
             }
             document.getElementById('student').innerHTML = html;
           });
@@ -150,8 +158,11 @@ function getStudents() {
           console.log(response); 
           console.log("length: " + Object.keys(response).length);
           var html = ''; 
+          var keys = Object.keys(response);
           for(var i = 0; i < Object.keys(response).length; i++) {
-            html += '<option>' + response[i].firstname + ' ' + response[i].lastname  + '</option>';
+            if(response[keys[i]].role == "datacollector") {
+              html += '<option>' + response[keys[i]].firstname + ' ' + response[keys[i]].lastname  + '</option>';
+            }
           }
           document.getElementById('student').innerHTML = html;
         }
@@ -159,7 +170,6 @@ function getStudents() {
     };
     request.open('GET', url);
     request.send();
-    });
 }
 
 function renderCards() {
@@ -168,6 +178,8 @@ function renderCards() {
   var padding = '16px';
   var openHtml = '';
   var closedHtml = '';
+  document.getElementById('openAssignments').innerHTML = '';
+  document.getElementById('closedAssignments').innerHTML = '';
   for(var i = 0; i < openAssignments.length; i++) {
     var treeList = '';
     for (var j = 0; j < openAssignments[i].trees.length; j++) {
@@ -265,7 +277,22 @@ document.getElementById('add').onclick = function() {
     }
     assignment = JSON.stringify(assignment);
     console.log(assignment);
-    modal.style.display = "none";
+
+    var url = 'https://haiti-orchard.firebaseio.com/assignments/123456/' + (lastKey + 1) + '.json?auth=' + localStorage.getItem("idToken");
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if(request.readyState === XMLHttpRequest.DONE) {
+        if(request.status === 200) {
+          var response = JSON.parse(request.response);
+          console.log(response);
+          getAssignments();
+          modal.style.display = "none";
+        }
+      }
+    };
+    request.open("PUT", url, true);
+    request.setRequestHeader("Content-type", "application/json");
+    request.send(assignment);
   }
   
 }

@@ -8,14 +8,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 var orchards =[];
+var lastKey = 0;
+
 
 function getOrchards() {
-  firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-    var url = 'https://haiti-orchard.firebaseio.com/orchards.json?auth=' + idToken;
+    var url = 'https://haiti-orchard.firebaseio.com/orchards.json?auth=' + localStorage.getItem("idToken");
     if ('caches' in window) {
       caches.match(url).then(function(response) {
         if (response) {
           response.json().then(function(json) {
+            orchards = [];
             console.log("cached json: " + json);
             console.log(json);
             var orchardNames = [];
@@ -23,10 +25,13 @@ function getOrchards() {
             list.innerHTML = '';
             var html = '';
             for(var i = 0; i < json.length; i++) {
+              lastKey = i;
               orchardNames.push(json[i].name);
-              html += '<li><a href="#">' + json[i].name + '</a></li>';
+              orchards.push(json[i]);
+              html += '<li><a id="' + i + '">' + json[i].name + '</a></li>';
             }
             list.innerHTML = html;
+            clickList();
           });
         }
       });
@@ -35,6 +40,7 @@ function getOrchards() {
     request.onreadystatechange = function() {
       if(request.readyState === XMLHttpRequest.DONE) {
         if(request.status === 200) {
+          orchards = [];
           var response = JSON.parse(request.response);
           console.log("http response: " + response);
           console.log(response);
@@ -44,6 +50,7 @@ function getOrchards() {
           list.innerHTML = '';
           var html = '';
           for(var i = 0; i < Object.keys(response).length; i++) {
+            lastKey = i;
             console.log("key: " + i);
             orchardNames.push(response[i].name);
             orchards.push(response[i]);
@@ -56,7 +63,6 @@ function getOrchards() {
     };
     request.open('GET', url);
     request.send();
-    });
 }
 
 document.getElementById("myInput").onkeyup = function() {
@@ -77,6 +83,7 @@ document.getElementById("myInput").onkeyup = function() {
 
 function clickList() {
   console.log("adding click function");
+  console.log(orchards);
   document.getElementById("myUL").addEventListener("click", function(e) {
     console.log("orchard has been clicked");
     console.log(e.target);
@@ -139,6 +146,21 @@ document.getElementById('add').onclick = function() {
     };
     orchard = JSON.stringify(orchard);
     console.log(orchard);
-    modal.style.display = "none";
+
+    var url = 'https://haiti-orchard.firebaseio.com/orchards/' + (lastKey + 1) + '.json?auth=' + localStorage.getItem("idToken");
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if(request.readyState === XMLHttpRequest.DONE) {
+        if(request.status === 200) {
+          var response = JSON.parse(request.response);
+          console.log(response);
+          getOrchards();
+          modal.style.display = "none";
+        }
+      }
+    };
+    request.open("PUT", url, true);
+    request.setRequestHeader("Content-type", "application/json");
+    request.send(orchard);
   }
 }

@@ -18,8 +18,12 @@ function getUsers() {
           response.json().then(function(json) {
             console.log("cached json: " + json);
             console.log(json);
+
             var supervisorTable = document.getElementById("supervisorTable");
             var dataCollectorTable = document.getElementById("dataCollectorsTable");
+            supervisorTable.innerHTML = '<tr><th>Firstname</th><th>Lastname</th><th>Email</th></tr>';
+            dataCollectorTable.innerHTML = '<tr><th>Firstname</th><th>Lastname</th><th>Email</th></tr>';
+   
             var keys = Object.keys(json);
             for(var i = 0; i < Object.keys(json).length; i++) {
               var user = json[keys[i]];
@@ -39,8 +43,6 @@ function getUsers() {
         }
       });
   }
-  firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-    var url = 'https://haiti-orchard.firebaseio.com/users.json?auth=' + idToken;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if(request.readyState === XMLHttpRequest.DONE) {
@@ -49,8 +51,12 @@ function getUsers() {
           console.log("http response: " + response);
           console.log(response);
           console.log("length: " + Object.keys(response).length);
+
           var supervisorTable = document.getElementById("supervisorTable");
           var dataCollectorTable = document.getElementById("dataCollectorsTable");
+          supervisorTable.innerHTML = '<tr><th>Firstname</th><th>Lastname</th><th>Email</th></tr>';
+          dataCollectorTable.innerHTML = '<tr><th>Firstname</th><th>Lastname</th><th>Email</th></tr>';
+
           var keys = Object.keys(response);
           for(var i = 0; i < Object.keys(response).length; i++) {
             console.log("key: " + i);
@@ -73,10 +79,6 @@ function getUsers() {
     };
     request.open('GET', url);
     request.send();
-    }).
-    catch(function(error) {
-      console.log("error getUsers: " + error);
-    });
 }
 
 var modal = document.getElementById('myModal');
@@ -113,14 +115,33 @@ document.getElementById('add').onclick = function() {
   if (email == "" || firstname == "" || lastname == "" || role == null) {
     document.getElementById('warning').style.color = "red";
   } else {
+    var emailName = email.split("@")[0];
+    console.log(emailName);
+
     var user = {
       "email": email,
       "firstname": firstname,
       "lastname": lastname,
       "role": role.value
-    }
+    };
     user = JSON.stringify(user);
     console.log(user);
-    modal.style.display = "none";
+
+    var url = 'https://haiti-orchard.firebaseio.com/users/' + emailName + '.json?auth=' + localStorage.getItem("idToken");
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if(request.readyState === XMLHttpRequest.DONE) {
+        if(request.status === 200) {
+          var response = JSON.parse(request.response);
+          console.log(response);
+          getUsers();
+          modal.style.display = "none";
+        }
+      }
+    };
+    request.open("PUT", url, true);
+    request.setRequestHeader("Content-type", "application/json");
+    request.send(user);
   }
 }
+

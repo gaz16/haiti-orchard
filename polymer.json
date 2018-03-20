@@ -9,6 +9,8 @@
     "src/haiti-orchard-app/add-user.html",
     "src/haiti-orchard-app/add-orchard.html",
     "src/haiti-orchard-app/add-assignment.html",
+    "src/haiti-orchard-app/my-assignments.html",
+    "verifyuser.js",
     "users.js",
     "orchards.js",
     "assignments.js",

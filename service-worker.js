@@ -1,7 +1,8 @@
 var cacheName = 'haitiOrchardPWA-2';
 var dataCacheName = 'haitiOrchardData-1';
-var dataUrl = 'https://haiti-orchard.firebaseio.com/assignments/123456';
+var dataUrl = 'https://haiti-orchard.firebaseio.com/assignments';
 var userUrl = 'https://haiti-orchard.firebaseio.com/users';
+var orchardUrl = 'https://haiti-orchard.firebaseio.com/orchards';
 var filesToCache = [
   '/',
   '/index.html',
@@ -11,13 +12,20 @@ var filesToCache = [
   '/src/haiti-orchard-app/add-user.html',
   '/src/haiti-orchard-app/add-orchard.html',
   '/src/haiti-orchard-app/add-assignment.html',
+  '/src/haiti-orchard-app/my-assignments.html',
+  '/images/right-arrow.png',
+  '/images/big-plus-sign-white.png',
+  '/images/big-plus-sign.png',
+  '/images/cross.png',
   '/images/clipboards.png',
   '/images/employees.png',
   '/images/forest.png',
+  '/images/search.png',
   '/fetchassignments.js',
   '/orchardsurvey.js',
   '/treesurvey.js',
   '/users.js',
+  '/verifyuser.js',
   '/orchards.js',
   '/assignments.js'
 ];
@@ -48,7 +56,7 @@ self.addEventListener('activate', function(e) {
 
 self.addEventListener('fetch', function(e) {
   console.log('[ServiceWorker] Fetch', e.request.url);
-  if (e.request.url.startsWith(dataUrl) || e.request.url.startsWith(userUrl)) {
+  if (e.request.url.startsWith(dataUrl) || e.request.url.startsWith(userUrl) || e.request.url.startsWith(orchardUrl)) {
     e.respondWith(
       fetch(e.request)
         .then(function(response) {
